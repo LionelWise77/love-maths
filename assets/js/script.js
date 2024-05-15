@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function() {
     for (let button of buttons) {
         button.addEventListener("click", function() {
             if (this.getAttribute("data-type") === "submit") {
-                alert("You clicked Submit!");
+                checkAnswer();
             } else {
                 let gameType = this.getAttribute("data-type");
                 runGame(gameType);
@@ -35,20 +35,60 @@ function runGame(gameType) {
 }
 
 
-
+/**
+ * check the answer againts the first element in the 
+ * returned calculatedcorrectAnswer array
+ */
 function checkAnswer() {
+    let userAnswer = parseInt(document.getElementById("answer-box").value);
+    let calculatedAnswer = calculateCorrectAnswer();
+    let isCorrect = userAnswer === calculatedAnswer[0];
 
+    if (isCorrect) {
+        alert("Hey! You Got it Right! :D");
+        incrementScore();
+    } else {
+        alert(`Awwww.... you answered ${userAnswer}. The correct Answer was ${calculatedAnswer[0]}!`);
+        incrementWrongAnswer();
+
+    }
+
+    runGame(calculatedAnswer[1]);
+    
 }
+
+/**
+ * get the operands (the numbers) and the operator (plus,minus etc)
+ * directly from de dom, and returns the correct answer.
+ */
 
 function calculateCorrectAnswer() {
+    let operand1 = parseInt(document.getElementById('operand1').innerText);
+    let operand2 = parseInt(document.getElementById('operand2').innerText);
+    let operator = document.getElementById("operator").innerText;
+
+    if (operator === "+")  {
+        return [operand1 + operand2, "addition"];
+    } else {
+        alert(`Unimplemented operator ${operator}`);
+        throw `Unimplemented operator ${operator}. Aborting!`;
+    }
 
 }
-
+ 
+/**
+ * get the current score from the DOM and incremets it by 1
+ */
 function incrementScore() {
-
+    let oldScore = parseInt(document.getElementById("score").innerText);
+    document.getElementById("score").innerText = ++oldScore;
 }
-
+/**
+ * get the current tally of incorrect answers from the DOM and incremets it by 1
+ */
 function incrementWrongAnswer() {
+    let oldScore = parseInt(document.getElementById("incorrect").innerText);
+    document.getElementById("incorrect").innerText = ++oldScore;
 
 }
 
